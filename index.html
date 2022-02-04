@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OFCRA Arma 3 Launcher presets</title>
+    <meta name="description" content="OFCRA Arma 3 Launcher presets generated from OFCRA ArmA3Sync events. Return to 🐒" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css">
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        #loading {
+            text-align: center;
+        }
+
+        #loading .spinner {
+            position: relative;
+            display: inline-block;
+            width: 20px;
+            vertical-align: middle;
+        }
+
+        @keyframes spinner {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .spinner:before {
+            content: '';
+            box-sizing: border-box;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin-top: -10px;
+            margin-left: -10px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            border-top-color: #07d;
+            border-bottom-color: #07d;
+            animation: spinner .8s ease infinite;
+        }
+
+        .dnone {
+            display: none;
+        }
+
+        #events tr th,
+        #events tr td {
+            text-align: center;
+        }
+
+        #events tr th:first-child,
+        #events tr td:first-child {
+            text-align: left;
+        }
+
+        #events tr th:last-child,
+        #events tr td:last-child {
+            text-align: right;
+        }
+
+        #events td a {
+            cursor: pointer;
+        }
+
+        #dialog-header button {
+            padding: 7px;
+            margin: 0;
+        }
+
+        #dialog-header button:focus {
+            border: 0;
+            box-shadow: none;
+        }
+
+        #dialog-header {
+            padding: 10px 20px;
+        }
+
+        #dialog-content {
+            display: flex;
+            flex-flow: column;
+            align-items: flex-start;
+            padding: 10px 20px;
+            margin: -10px -30px -10px;
+        }
+
+        #dialog-content div {
+            margin-bottom: 10px;
+        }
+
+        #changelogs h4 {
+            margin-bottom: 6px;
+        }
+
+        #changelogs ul {
+            margin-top: 0;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            footer a.github {
+                fill: #c6cbd1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1 class="center">OFCRA Arma 3 Launcher presets</h1>
+
+        <p class="center">...generated from OFCRA ArmA3Sync events. Return to 🐒</p>
+
+        <p id="loading">
+            <span class="spinner"></span> <span id="loading-text">Loading...</span>
+        </p>
+    </header>
+
+    <main id="main" class="dnone">
+        <section>
+            <h2>Events</h2>
+            <table id="events">
+                <thead>
+                    <tr>
+                        <th title="Description">Event</th>
+                        <th title="Workshop + Local">Mods</th>
+                        <th>Download</th>
+                    </tr>
+                </thead>
+                <tbody id="events-tbody"></tbody>
+            </table>
+            <dialog id="mods">
+                <header id="dialog-header" class="row">
+                    <span id="mods-title"></span>
+                    <form method="dialog"><button>❌</button></form>
+                </header>
+                <div id="dialog-content"></div>
+            </dialog>
+        </section>
+
+        <section>
+            <h2>Changelogs</h2>
+            <div id="changelogs"></div>
+        </section>
+    </main>
+
+    <footer class="center">
+        <a href="https://github.com/a-sync/ofcra-presets.cloudno.de" class="github"><svg width="16" height="16"
+                viewBox="0 0 16 16" version="1.1" aria-hidden="true">
+                <path fill-rule="evenodd"
+                    d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
+                </path>
+            </svg></a>
+    </footer>
+
+    <script>
+        const id = s => document.getElementById(s);
+        const q = qs => document.querySelectorAll(qs);
+        const e = (type, options) => document.createElement(type, options);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.addEventListener('click', event => {
+                if (!event.target.closest('a[data-mods]') && !event.target.closest('#dialog-header') && !event.target.closest('#dialog-content')) {
+                    id('mods').close();
+                }
+            });
+
+            fetch('/data')
+                .then(res => res.json())
+                .then(json => {
+                    render(json);
+                    id('loading').className = 'dnone';
+                    id('main').className = '';
+                }).catch(err => {
+                    console.error(err);
+                    id('loading').textContent = 'Something went wrong... 🙈';
+                    const pre = document.createElement('pre');
+                    pre.textContent = err.message || err;
+                    id('loading').append(pre);
+                });
+        });
+
+        function render(data) {
+            const modlink = m => {
+                if (m.publishedid) {
+                    return 'https://steamcommunity.com/sharedfiles/filedetails/?id=' + String(m.publishedid);
+                } else if (m.download) {
+                    return String(m.download);
+                } else {
+                    return '';
+                }
+            };
+
+            if (data.a3s && data.a3s.events && Array.isArray(data.a3s.events.list)) {
+                for (const index in data.a3s.events.list.reverse()) {
+                    const a3s_event = data.a3s.events.list[index];
+                    const tr = e('tr');
+
+                    const td1 = e('td');
+                    const event_name = e('span');
+                    event_name.textContent = a3s_event.name;
+                    event_name.title = a3s_event.description;
+                    td1.append(event_name);
+                    tr.append(td1);
+
+                    const td2 = e('td');
+                    const event_mods = { ws: [], local: [] };
+                    for (const addon in a3s_event.addonNames) {
+                        if (data.mods[addon] && data.mods[addon].publishedid) {
+                            event_mods.ws.push(addon);
+                        } else {
+                            event_mods.local.push(addon);
+                        }
+                    }
+                    if (event_mods.ws.length > 0) {
+                        const ws_mods = e('a');
+                        ws_mods.dataset.event = a3s_event.name + ' Workshop mods';
+                        ws_mods.dataset.mods = event_mods.ws.join(',');
+                        ws_mods.textContent = String(event_mods.ws.length);
+                        td2.append(ws_mods);
+                    } else {
+                        td2.append(document.createTextNode('0'));
+                    }
+
+                    td2.append(document.createTextNode(' + '));
+
+                    if (event_mods.local.length > 0) {
+                        const local_mods = e('a');
+                        local_mods.dataset.event = a3s_event.name + ' Local mods';
+                        local_mods.dataset.mods = event_mods.local.join(',');
+                        local_mods.textContent = String(event_mods.local.length);
+                        td2.append(local_mods);
+                    } else {
+                        td2.append(document.createTextNode('0'));
+                    }
+                    tr.append(td2);
+
+                    const td3 = e('td');
+                    const filename = 'OFCRA_' + a3s_event.name.replace(/^\[OFCRA\] /, '').replace(' ', '_');
+                    const dl = e('a');
+                    dl.dataset.index = index;
+                    dl.textContent = filename;
+                    td3.append(dl);
+                    tr.append(td3);
+
+                    id('events-tbody').append(tr);
+                }
+
+                q('a[data-mods]').forEach(el => {
+                    el.addEventListener('click', event => {
+                        id('mods-title').textContent = event.target.dataset.event;
+
+                        const dc = id('dialog-content');
+                        dc.replaceChildren();
+                        if (event.target.dataset.mods) {
+                            const mods = event.target.dataset.mods.split(',');
+                            for (const addon of mods) {
+                                const div = e('div');
+                                const b = e('b');
+                                b.textContent = data.mods[addon] ? data.mods[addon].name : addon;
+                                if (data.mods[addon] && data.mods[addon].id !== data.mods[addon].name) {
+                                    b.title = data.mods[addon].id;
+                                }
+                                div.append(b);
+
+                                const ml = data.mods[addon] ? modlink(data.mods[addon]) : '';
+                                if (ml) {
+                                    b.textContent += ': ';
+                                    const a = e('a');
+                                    a.href = ml;
+                                    a.textContent = ml;
+                                    div.append(a);
+                                }
+
+                                dc.append(div);
+                            }
+
+                            id('mods').showModal();
+                        }
+                    });
+                });
+
+                q('#events a[data-index]').forEach(el => {
+                    el.addEventListener('click', event => {
+                        const index = event.target.dataset.index;
+                        downloadPreset(data.a3s.events.list[index], data.mods);
+                    });
+                });
+            }
+
+            if (data.a3s && data.a3s.changelogs && Array.isArray(data.a3s.changelogs.list)) {
+                const modlist = arr => {
+                    const ul = e('ul');
+                    for (const addon of arr) {
+                        const li = e('li');
+
+                        const ml = data.mods[addon] ? modlink(data.mods[addon]) : '';
+                        if (ml) {
+                            const a = e('a');
+                            a.href = ml;
+                            a.textContent = data.mods[addon].name;
+                            li.append(a);
+                        } else {
+                            const span = e('span');
+                            span.textContent = data.mods[addon] ? data.mods[addon].name : addon;
+                            li.append(span);
+                        }
+
+                        if (data.mods[addon] && data.mods[addon].id !== data.mods[addon].name) {
+                            li.firstChild.title = data.mods[addon].id;
+                        }
+
+                        ul.append(li);
+                    }
+                    return ul;
+                };
+
+                for (const a3s_log of data.a3s.changelogs.list.reverse()) {
+                    const log = e('details');
+                    const summary = e('summary');
+                    const bd = a3s_log.buildDate.split('T');
+                    summary.textContent = bd[0] + ' ' + bd[1].split('.')[0];
+                    log.append(summary);
+
+                    for (const type of ['newAddons', 'updatedAddons', 'deletedAddons']) {
+                        if (Array.isArray(a3s_log[type]) && a3s_log[type].length > 0) {
+                            const title = e('h4');
+                            title.textContent = type.charAt(0).toUpperCase() + type.slice(1, -6);
+                            log.append(title);
+                            log.append(modlist(a3s_log[type]));
+                        }
+                    }
+
+                    id('changelogs').append(log);
+                }
+            }
+        }
+
+        function downloadPreset(a3s_event, mods) {
+            const preset_template = '<?xml version="1.0" encoding="utf-8"?><html><!--Created by https://ofcra-presets.cloudno.de--><head><meta name="arma:Type" content="preset" /><meta name="arma:PresetName" content="{PRESET_FILENAME}" /><meta name="generator" content="Arma 3 Launcher - https://ofcra-presets.cloudno.de" /><title>Arma 3</title><link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css" /><style>body{margin:0;padding:0;color:#fff;background:#000}body,td,th{font:95%/1.3 Roboto, Segoe UI, Tahoma, Arial, Helvetica, sans-serif}td{padding:3px 30px 3px 0}h1{padding:20px 20px 0 80px;color:white;font-weight:200;font-family:segoe ui;font-size:3em;margin:0;background:transparent url(https://game.ofcra.org/img/logo.png) left 15px no-repeat;background-size: 80px auto;}em{font-variant:italic;color:silver}.before-list{padding:5px 20px 10px}.mod-list{background:#222222;padding:20px}.dlc-list{background:#222222;padding:20px}.footer{padding:20px;color:gray}.whups{color:gray}a{color:#D18F21;text-decoration:underline}a:hover{color:#F1AF41;text-decoration:none}.from-steam{color:#449EBD}.from-local{color:gray}</style></head><body><h1>Arma 3 - Preset <strong>{PRESET_NAME}</strong></h1><p class="before-list"><em>Drag this file or link to it to Arma 3 Launcher or open it Mods / Preset / Import.</em><br/>Download non workshop mods from the <a href="https://ofcrav2.org/index.php?page=repository-en">OFCRA mod index</a>, unpack them and load the extracted folders as <em>Local mod</em>.</p><div class="mod-list"><table>{MOD_LIST}</table></div><div class="dlc-list"></div><div class="footer"><span>Created by <a href="https://ofcra-presets.cloudno.de">https://ofcra-presets.cloudno.de</a></span></div></body></html>';
+
+            const name = a3s_event.name;
+            const filename = 'OFCRA_' + name.replace(/^\[OFCRA\] /, '').replace(' ', '_');
+            const modcontainers = [];
+            for (const addon in a3s_event.addonNames) {
+                let dn = addon;
+                let from = 'local">Local';
+                let local = '';
+                let link = '';
+                if (mods[addon]) {
+                    dn = mods[addon].name;
+                    if (mods[addon].publishedid) {
+                        from = 'steam">Steam';
+                        const link_href = 'http://steamcommunity.com/sharedfiles/filedetails/?id=' + mods[addon].publishedid;
+                        link = '<a href="' + link_href + '" data-type="Link">' + link_href + '</a>';
+                    } else {
+                        local = '<span class="whups" data-type="Link" data-meta="local:' + dn + '|' + addon + '|" />';
+                        if (mods[addon].download) {
+                            link = '<a href="' + mods[addon].download + '">' + mods[addon].download + '</a>';
+                        }
+                    }
+                } else {
+                    local = '<span class="whups" data-type="Link" data-meta="local:' + addon + '|' + addon + '|" />';
+                }
+                modcontainers.push('<tr data-type="ModContainer"><td data-type="DisplayName">' + dn + '</td><td><span class="from-' + from + '</span></td><td>' + local + link + '</td></tr>');
+            }
+
+            const source = preset_template
+                .replace('{PRESET_FILENAME}', filename)
+                .replace('{PRESET_NAME}', name)
+                .replace('{MOD_LIST}', modcontainers.join(''));
+            const element = document.createElement('a');
+            element.href = 'data:text/html;charset=utf-8,' + encodeURIComponent(source);
+            element.download = filename + '.html';
+            element.style.display = 'none';
+            document.body.append(element);
+            element.click();
+            element.remove();
+        }
+    </script>
+</body>
+
+</html>
