@@ -263,7 +263,7 @@
                     tr.append(td2);
 
                     const td3 = e('td');
-                    const filename = 'OFCRA_' + a3s_event.name.replace(/^\[OFCRA\] /, '').replace(' ', '_');
+                    const filename = 'OFCRA_' + a3s_event.name.replace(/^\[OFCRA\] /, '').replaceAll(' ', '_');
                     const dl = e('a');
                     dl.dataset.index = index;
                     dl.textContent = filename + '.html';
@@ -367,7 +367,7 @@
             const preset_template = '<?xml version="1.0" encoding="utf-8"?><html><!--Created by https://ofcra-presets.cloudno.de--><head><meta name="arma:Type" content="preset" /><meta name="arma:PresetName" content="{PRESET_FILENAME}" /><meta name="generator" content="Arma 3 Launcher - https://ofcra-presets.cloudno.de" /><title>Arma 3</title><link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css" /><style>body{margin:0;padding:0;color:#fff;background:#000}body,td,th{font:95%/1.3 Roboto, Segoe UI, Tahoma, Arial, Helvetica, sans-serif}td{padding:3px 30px 3px 0}h1{padding:20px 20px 0 80px;color:white;font-weight:200;font-family:segoe ui;font-size:3em;margin:0;background:transparent url(https://game.ofcra.org/img/logo.png) left 15px no-repeat;background-size: 80px auto;}em{font-variant:italic;color:silver}.before-list{padding:5px 20px 10px}.mod-list{background:#222222;padding:20px}.dlc-list{background:#222222;padding:20px}.footer{padding:20px;color:gray}.whups{color:gray}a{color:#D18F21;text-decoration:underline}a:hover{color:#F1AF41;text-decoration:none}.from-steam{color:#449EBD}.from-local{color:gray}</style></head><body><h1>Arma 3 - Preset <strong>{PRESET_NAME}</strong></h1><p class="before-list"><em>Drag this file or link to it to Arma 3 Launcher or open it Mods / Preset / Import.</em><br/>Download non workshop mods from the <a href="https://ofcrav2.org/index.php?page=repository-en">OFCRA mod index</a>, unpack them and load the extracted folders as <em>Local mod</em>.</p><div class="mod-list"><table>{MOD_LIST}</table></div><div class="dlc-list"></div><div class="footer"><span>Created by <a href="https://ofcra-presets.cloudno.de">https://ofcra-presets.cloudno.de</a></span></div></body></html>';
 
             const name = a3s_event.name;
-            const filename = 'OFCRA_' + name.replace(/^\[OFCRA\] /, '').replace(' ', '_');
+            const filename = 'OFCRA_' + name.replace(/^\[OFCRA\] /, '').replaceAll(' ', '_');
             const modcontainers = [];
             for (const addon in a3s_event.addonNames) {
                 let dn = addon;
