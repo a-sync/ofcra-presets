@@ -1,7 +1,7 @@
 import { parse } from 'arma-class-parser';
 import got from 'got';
-import { Low, JSONFile } from 'lowdb';
-import { A3sEventsDto } from './A3sRemoteServer.js';
+import { Low, JSONFile } from '@commonify/lowdb';
+import { A3sEventsDto } from './A3sRemoteServer';
 
 export interface Mod {
     id: string;
@@ -56,9 +56,12 @@ export default class A3sMods {
         if (this.db && this.db.data) {
             const new_mods: Mod[] = [];
 
+            let updated = false;
             for (const e of events.list) {
                 for (const a in e.addonNames) {
                     if (this.db.data.mods[a] === undefined && new_mods.find(m => m.id === a) === undefined) {
+                        updated = true;
+
                         if (this.overrides && this.overrides[a] !== undefined) {
                             this.db.data.mods[a] = this.overrides[a];
                         } else {
@@ -80,6 +83,12 @@ export default class A3sMods {
                 }
 
                 await Promise.all(promises);
+            }
+
+            if (updated) {
+                this.save().catch(e => {
+                    console.error(e.message);
+                });
             }
         } else {
             throw new Error('Db not initialized');

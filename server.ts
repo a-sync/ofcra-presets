@@ -1,8 +1,8 @@
 import fs from 'fs';
 import { createServer } from 'http';
 import { URL } from 'url';
-import A3sRemoteServer from './A3sRemoteServer.js';
-import A3sMods from './A3sMods.js';
+import A3sRemoteServer from './A3sRemoteServer';
+import A3sMods from './A3sMods';
 
 const OFCRA_A3S_URL = 'http://repo.ofcra.org/.a3s/';
 const OFCRA_A3S_REPO_URL = 'http://repo.ofcra.org/';
@@ -47,7 +47,6 @@ createServer(async (req, res) => {
             }
             await a3sm.init();
             await a3sm.parseA3sEvents(a3srs.events);
-            a3sm.save();
             res.writeHead(200, res_headers);
             res.end(JSON.stringify({
                 mods: a3sm.getMods(),
@@ -63,11 +62,11 @@ createServer(async (req, res) => {
     else if (reqUrl.pathname === '/flush/' + SECRET) {
         fs.unlinkSync(MOD_DB_FILE);
         res.writeHead(200, { 'Content-Type': 'text/html' });
-        res.end('<html><head></head><body>Mods cache emptied &#x1F9F9<body></html>');
+        res.end('<html><head></head><body>Mods cache emptied &#x1F9F9</body></html>');
     }
     else {
         res.writeHead(404, { 'Content-Type': 'text/html' });
-        res.end('<html><head></head><body>404 &#x1F4A2<body></html>');
+        res.end('<html><head></head><body>404 &#x1F4A2</body></html>');
     }
 }).listen(APP_PORT);
 

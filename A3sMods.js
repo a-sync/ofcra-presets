@@ -1,8 +1,13 @@
-import { parse } from 'arma-class-parser';
-import got from 'got';
-import { Low, JSONFile } from 'lowdb';
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const arma_class_parser_1 = require("arma-class-parser");
+const got_1 = __importDefault(require("got"));
+const lowdb_1 = require("@commonify/lowdb");
 const OFCRA_MOD_INDEX = 'https://ofcrav2.org/index.php?page=repository-en';
-export default class A3sMods {
+class A3sMods {
     /**
      *
      * @param a3s_repo_url the ArmA3Sync repo root url
@@ -17,8 +22,8 @@ export default class A3sMods {
         this.overrides = overrides;
     }
     async init() {
-        const adapter = new JSONFile(this.db_file);
-        this.db = new Low(adapter);
+        const adapter = new lowdb_1.JSONFile(this.db_file);
+        this.db = new lowdb_1.Low(adapter);
         await this.db.read();
         this.db.data = this.db.data || { mods: {} };
     }
@@ -30,9 +35,11 @@ export default class A3sMods {
     async parseA3sEvents(events) {
         if (this.db && this.db.data) {
             const new_mods = [];
+            let updated = false;
             for (const e of events.list) {
                 for (const a in e.addonNames) {
                     if (this.db.data.mods[a] === undefined && new_mods.find(m => m.id === a) === undefined) {
+                        updated = true;
                         if (this.overrides && this.overrides[a] !== undefined) {
                             this.db.data.mods[a] = this.overrides[a];
                         }
@@ -53,6 +60,11 @@ export default class A3sMods {
                 }
                 await Promise.all(promises);
             }
+            if (updated) {
+                this.save().catch(e => {
+                    console.error(e.message);
+                });
+            }
         }
         else {
             throw new Error('Db not initialized');
@@ -61,7 +73,7 @@ export default class A3sMods {
     // Note: this function OFCRA specific
     async fetchRepoIndexData(new_mods) {
         if (this.db && this.db.data) {
-            const src = await got(OFCRA_MOD_INDEX).text();
+            const src = await (0, got_1.default)(OFCRA_MOD_INDEX).text();
             const rows = src.split('<tr>').slice(2);
             for (const r of rows) {
                 const link_id = r.match(/<td>(.*?)<\/td><td>(.*?)<\/td>/);
@@ -142,7 +154,7 @@ export default class A3sMods {
                 }
             }
             if (this.db.data.mods[id].publishedid && this.db.data.mods[id].name === id) {
-                const stream = got.stream('https://steamcommunity.com/sharedfiles/filedetails/?id=' + this.db.data.mods[id].publishedid);
+                const stream = got_1.default.stream('https://steamcommunity.com/sharedfiles/filedetails/?id=' + this.db.data.mods[id].publishedid);
                 const head = await new Promise((resolve, reject) => {
                     let chunks = '';
                     stream.on('error', reject);
@@ -167,16 +179,16 @@ export default class A3sMods {
         let cpp = null;
         let raw = null;
         try {
-            raw = await got(file_url, { encoding: 'binary', responseType: 'buffer', resolveBodyOnly: true });
+            raw = await (0, got_1.default)(file_url, { encoding: 'binary', responseType: 'buffer', resolveBodyOnly: true });
         }
         catch (err) { }
         if (raw) {
             try {
-                cpp = parse(raw.toString('utf8'));
+                cpp = (0, arma_class_parser_1.parse)(raw.toString('utf8'));
             }
             catch (err_utf8) {
                 try {
-                    cpp = parse(raw.toString('utf16le'));
+                    cpp = (0, arma_class_parser_1.parse)(raw.toString('utf16le'));
                 }
                 catch (err_utf16) {
                     console.error('Parsing error', file_url);
@@ -190,3 +202,4 @@ export default class A3sMods {
         return (_b = (_a = this.db) === null || _a === void 0 ? void 0 : _a.data) === null || _b === void 0 ? void 0 : _b.mods;
     }
 }
+exports.default = A3sMods;

@@ -76,8 +76,18 @@
             text-align: right;
         }
 
+        #events tbody tr th:last-child,
+        #events tbody tr td:last-child {
+            font-size: .7rem;
+            vertical-align: middle;
+        }
+
         #events td a {
             cursor: pointer;
+        }
+
+        #mods-title {
+            font-weight: bold;
         }
 
         #dialog-header button {
@@ -141,7 +151,7 @@
                     <tr>
                         <th title="Description">Event</th>
                         <th title="Workshop + Local">Mods</th>
-                        <th>Download</th>
+                        <th title="Download">Preset</th>
                     </tr>
                 </thead>
                 <tbody id="events-tbody"></tbody>
@@ -256,7 +266,7 @@
                     const filename = 'OFCRA_' + a3s_event.name.replace(/^\[OFCRA\] /, '').replace(' ', '_');
                     const dl = e('a');
                     dl.dataset.index = index;
-                    dl.textContent = filename;
+                    dl.textContent = filename + '.html';
                     td3.append(dl);
                     tr.append(td3);
 
@@ -273,16 +283,16 @@
                             const mods = event.target.dataset.mods.split(',');
                             for (const addon of mods) {
                                 const div = e('div');
-                                const b = e('b');
-                                b.textContent = data.mods[addon] ? data.mods[addon].name : addon;
+                                const span = e('span');
+                                span.textContent = data.mods[addon] ? data.mods[addon].name : addon;
                                 if (data.mods[addon] && data.mods[addon].id !== data.mods[addon].name) {
-                                    b.title = data.mods[addon].id;
+                                    span.title = data.mods[addon].id;
                                 }
-                                div.append(b);
+                                div.append(span);
 
                                 const ml = data.mods[addon] ? modlink(data.mods[addon]) : '';
                                 if (ml) {
-                                    b.textContent += ': ';
+                                    span.textContent += ': ';
                                     const a = e('a');
                                     a.href = ml;
                                     a.textContent = ml;

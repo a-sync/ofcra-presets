@@ -4,3 +4,7 @@
 ## Sources
 A3S repo: http://repo.ofcra.org/.a3s/  
 Mods index: https://ofcrav2.org/index.php?page=repository-en  
+
+## Usage with Arma 3 launcher
+  1. Download, unpack and load the required **Local mod**s
+  2. **Import** the preset file
