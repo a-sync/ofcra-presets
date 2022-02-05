@@ -70,7 +70,7 @@ class A3sMods {
             throw new Error('Db not initialized');
         }
     }
-    // Note: this function OFCRA specific
+    // Note: this function is OFCRA specific
     async fetchRepoIndexData(new_mods) {
         if (this.db && this.db.data) {
             const src = await (0, got_1.default)(OFCRA_MOD_INDEX).text();

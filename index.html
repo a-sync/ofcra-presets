@@ -19,10 +19,7 @@
             justify-content: space-between;
         }
 
-        .center {
-            text-align: center;
-        }
-
+        .center,
         #loading {
             text-align: center;
         }
@@ -169,6 +166,22 @@
             <h2>Changelogs</h2>
             <div id="changelogs"></div>
         </section>
+
+        <section>
+            <h2>Usage</h2>
+            <div id="usage">
+                <details>
+                    <summary>Download, unpack and load the required <b>Local mod</b>s</summary>
+                    <img src="https://user-images.githubusercontent.com/14183614/152661491-d9ba4ed2-6610-404a-8617-d3394d1c2765.gif"
+                        alt="" />
+                </details>
+                <details>
+                    <summary>Download and <b>Import</b> the preset file</summary>
+                    <img src="https://user-images.githubusercontent.com/14183614/152661609-bfe16700-baa0-471a-b2d1-e606701cf57e.gif"
+                        alt="" />
+                </details>
+            </div>
+        </section>
     </main>
 
     <footer class="center">
@@ -183,7 +196,11 @@
     <script>
         const id = s => document.getElementById(s);
         const q = qs => document.querySelectorAll(qs);
-        const e = (type, options) => document.createElement(type, options);
+        const e = (type, text, options) => {
+            const re = document.createElement(type, options);
+            if (text !== undefined) re.textContent = text;
+            return re;
+        }
 
         document.addEventListener('DOMContentLoaded', () => {
             document.addEventListener('click', event => {
@@ -201,36 +218,26 @@
                 }).catch(err => {
                     console.error(err);
                     id('loading').textContent = 'Something went wrong... 🙈';
-                    const pre = document.createElement('pre');
-                    pre.textContent = err.message || err;
+                    const pre = e('pre', err.message || err);
                     id('loading').append(pre);
                 });
         });
 
-        function render(data) {
-            const modlink = m => {
-                if (m.publishedid) {
-                    return 'https://steamcommunity.com/sharedfiles/filedetails/?id=' + String(m.publishedid);
-                } else if (m.download) {
-                    return String(m.download);
-                } else {
-                    return '';
-                }
-            };
+        const modlink = m => {
+            if (m.publishedid) {
+                return 'https://steamcommunity.com/sharedfiles/filedetails/?id=' + String(m.publishedid);
+            } else if (m.download) {
+                return String(m.download);
+            } else {
+                return '';
+            }
+        };
 
+        function render(data) {
+            // Events
             if (data.a3s && data.a3s.events && Array.isArray(data.a3s.events.list)) {
                 for (const index in data.a3s.events.list.reverse()) {
                     const a3s_event = data.a3s.events.list[index];
-                    const tr = e('tr');
-
-                    const td1 = e('td');
-                    const event_name = e('span');
-                    event_name.textContent = a3s_event.name;
-                    event_name.title = a3s_event.description;
-                    td1.append(event_name);
-                    tr.append(td1);
-
-                    const td2 = e('td');
                     const event_mods = { ws: [], local: [] };
                     for (const addon in a3s_event.addonNames) {
                         if (data.mods[addon] && data.mods[addon].publishedid) {
@@ -239,11 +246,17 @@
                             event_mods.local.push(addon);
                         }
                     }
+
+                    const td1 = e('td');
+                    const event_name = e('span', a3s_event.name);
+                    event_name.title = a3s_event.description;
+                    td1.append(event_name);
+
+                    const td2 = e('td');
                     if (event_mods.ws.length > 0) {
-                        const ws_mods = e('a');
+                        const ws_mods = e('a', String(event_mods.ws.length));
                         ws_mods.dataset.event = a3s_event.name + ' Workshop mods';
                         ws_mods.dataset.mods = event_mods.ws.join(',');
-                        ws_mods.textContent = String(event_mods.ws.length);
                         td2.append(ws_mods);
                     } else {
                         td2.append(document.createTextNode('0'));
@@ -252,61 +265,34 @@
                     td2.append(document.createTextNode(' + '));
 
                     if (event_mods.local.length > 0) {
-                        const local_mods = e('a');
+                        const local_mods = e('a', String(event_mods.local.length));
                         local_mods.dataset.event = a3s_event.name + ' Local mods';
                         local_mods.dataset.mods = event_mods.local.join(',');
-                        local_mods.textContent = String(event_mods.local.length);
                         td2.append(local_mods);
                     } else {
                         td2.append(document.createTextNode('0'));
                     }
-                    tr.append(td2);
 
                     const td3 = e('td');
-                    const filename = 'OFCRA_' + a3s_event.name.replace(/^\[OFCRA\] /, '').replaceAll(' ', '_');
-                    const dl = e('a');
+                    const filename = a3s_event.name.replace(/[\/\\\?\%\*\:\|\"\<\>]/g, '_');
+                    const dl = e('a', filename + '.html');
                     dl.dataset.index = index;
-                    dl.textContent = filename + '.html';
                     td3.append(dl);
-                    tr.append(td3);
+
+                    const tr = e('tr');
+                    tr.append(td1, td2, td3);
 
                     id('events-tbody').append(tr);
                 }
 
+                // Attach modal event handler to modlist links 
                 q('a[data-mods]').forEach(el => {
                     el.addEventListener('click', event => {
-                        id('mods-title').textContent = event.target.dataset.event;
-
-                        const dc = id('dialog-content');
-                        dc.replaceChildren();
-                        if (event.target.dataset.mods) {
-                            const mods = event.target.dataset.mods.split(',');
-                            for (const addon of mods) {
-                                const div = e('div');
-                                const span = e('span');
-                                span.textContent = data.mods[addon] ? data.mods[addon].name : addon;
-                                if (data.mods[addon] && data.mods[addon].id !== data.mods[addon].name) {
-                                    span.title = data.mods[addon].id;
-                                }
-                                div.append(span);
-
-                                const ml = data.mods[addon] ? modlink(data.mods[addon]) : '';
-                                if (ml) {
-                                    span.textContent += ': ';
-                                    const a = e('a');
-                                    a.href = ml;
-                                    a.textContent = ml;
-                                    div.append(a);
-                                }
-
-                                dc.append(div);
-                            }
-
-                            id('mods').showModal();
-                        }
+                        showModsModal(event.target, data.mods);
                     });
                 });
 
+                // Attach download event handler to preset links
                 q('#events a[data-index]').forEach(el => {
                     el.addEventListener('click', event => {
                         const index = event.target.dataset.index;
@@ -315,6 +301,7 @@
                 });
             }
 
+            // Changelogs
             if (data.a3s && data.a3s.changelogs && Array.isArray(data.a3s.changelogs.list)) {
                 const modlist = arr => {
                     const ul = e('ul');
@@ -323,13 +310,11 @@
 
                         const ml = data.mods[addon] ? modlink(data.mods[addon]) : '';
                         if (ml) {
-                            const a = e('a');
+                            const a = e('a', data.mods[addon].name);
                             a.href = ml;
-                            a.textContent = data.mods[addon].name;
                             li.append(a);
                         } else {
-                            const span = e('span');
-                            span.textContent = data.mods[addon] ? data.mods[addon].name : addon;
+                            const span = e('span', data.mods[addon] ? data.mods[addon].name : addon);
                             li.append(span);
                         }
 
@@ -344,15 +329,13 @@
 
                 for (const a3s_log of data.a3s.changelogs.list.reverse()) {
                     const log = e('details');
-                    const summary = e('summary');
                     const bd = a3s_log.buildDate.split('T');
-                    summary.textContent = bd[0] + ' ' + bd[1].split('.')[0];
+                    const summary = e('summary', bd[0] + ' ' + bd[1].split('.')[0]);
                     log.append(summary);
 
                     for (const type of ['newAddons', 'updatedAddons', 'deletedAddons']) {
                         if (Array.isArray(a3s_log[type]) && a3s_log[type].length > 0) {
-                            const title = e('h4');
-                            title.textContent = type.charAt(0).toUpperCase() + type.slice(1, -6);
+                            const title = e('h4', type.charAt(0).toUpperCase() + type.slice(1, -6));
                             log.append(title);
                             log.append(modlist(a3s_log[type]));
                         }
@@ -363,11 +346,41 @@
             }
         }
 
+        function showModsModal(target, mods) {
+            id('mods-title').textContent = target.dataset.event;
+
+            const dc = id('dialog-content');
+            dc.replaceChildren();
+            if (target.dataset.mods) {
+                const target_mods = target.dataset.mods.split(',');
+                for (const addon of target_mods) {
+                    const div = e('div');
+                    const span = e('span', mods[addon] ? mods[addon].name : addon);
+                    if (mods[addon] && mods[addon].id !== mods[addon].name) {
+                        span.title = mods[addon].id;
+                    }
+                    div.append(span);
+
+                    const ml = mods[addon] ? modlink(mods[addon]) : '';
+                    if (ml) {
+                        span.textContent += ': ';
+                        const a = e('a');
+                        a.href = ml;
+                        a.textContent = ml;
+                        div.append(a);
+                    }
+
+                    dc.append(div);
+                }
+
+                id('mods').showModal();
+            }
+        }
+
         function downloadPreset(a3s_event, mods) {
             const preset_template = '<?xml version="1.0" encoding="utf-8"?><html><!--Created by https://ofcra-presets.cloudno.de--><head><meta name="arma:Type" content="preset" /><meta name="arma:PresetName" content="{PRESET_FILENAME}" /><meta name="generator" content="Arma 3 Launcher - https://ofcra-presets.cloudno.de" /><title>Arma 3</title><link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css" /><style>body{margin:0;padding:0;color:#fff;background:#000}body,td,th{font:95%/1.3 Roboto, Segoe UI, Tahoma, Arial, Helvetica, sans-serif}td{padding:3px 30px 3px 0}h1{padding:20px 20px 0 80px;color:white;font-weight:200;font-family:segoe ui;font-size:3em;margin:0;background:transparent url(https://game.ofcra.org/img/logo.png) left 15px no-repeat;background-size: 80px auto;}em{font-variant:italic;color:silver}.before-list{padding:5px 20px 10px}.mod-list{background:#222222;padding:20px}.dlc-list{background:#222222;padding:20px}.footer{padding:20px;color:gray}.whups{color:gray}a{color:#D18F21;text-decoration:underline}a:hover{color:#F1AF41;text-decoration:none}.from-steam{color:#449EBD}.from-local{color:gray}</style></head><body><h1>Arma 3 - Preset <strong>{PRESET_NAME}</strong></h1><p class="before-list"><em>Drag this file or link to it to Arma 3 Launcher or open it Mods / Preset / Import.</em><br/>Download non workshop mods from the <a href="https://ofcrav2.org/index.php?page=repository-en">OFCRA mod index</a>, unpack them and load the extracted folders as <em>Local mod</em>.</p><div class="mod-list"><table>{MOD_LIST}</table></div><div class="dlc-list"></div><div class="footer"><span>Created by <a href="https://ofcra-presets.cloudno.de">https://ofcra-presets.cloudno.de</a></span></div></body></html>';
 
-            const name = a3s_event.name;
-            const filename = 'OFCRA_' + name.replace(/^\[OFCRA\] /, '').replaceAll(' ', '_');
+            const filename = a3s_event.name.replace(/[\/\\\?\%\*\:\|\"\<\>]/g, '_');
             const modcontainers = [];
             for (const addon in a3s_event.addonNames) {
                 let dn = addon;
@@ -394,7 +407,7 @@
 
             const source = preset_template
                 .replace('{PRESET_FILENAME}', filename)
-                .replace('{PRESET_NAME}', name)
+                .replace('{PRESET_NAME}', a3s_event.name)
                 .replace('{MOD_LIST}', modcontainers.join(''));
             const element = document.createElement('a');
             element.href = 'data:text/html;charset=utf-8,' + encodeURIComponent(source);

@@ -4,8 +4,8 @@ import { URL } from 'url';
 import A3sRemoteServer from './A3sRemoteServer';
 import A3sMods from './A3sMods';
 
-const OFCRA_A3S_URL = 'http://repo.ofcra.org/.a3s/';
-const OFCRA_A3S_REPO_URL = 'http://repo.ofcra.org/';
+const A3S_URL = 'http://repo.ofcra.org/.a3s/';
+const A3S_REPO_URL = 'http://repo.ofcra.org/';
 
 const MOD_DB_FILE = process.env.MOD_DB_FILE || './mods.json';
 const MOD_OVERRIDES = {
@@ -34,8 +34,8 @@ createServer(async (req, res) => {
         fs.createReadStream('./index.html').pipe(res);
     }
     else if (reqUrl.pathname === '/data') {
-        const a3srs = new A3sRemoteServer(OFCRA_A3S_URL);
-        const a3sm = new A3sMods(OFCRA_A3S_REPO_URL, MOD_DB_FILE, MOD_OVERRIDES);
+        const a3srs = new A3sRemoteServer(A3S_URL);
+        const a3sm = new A3sMods(A3S_REPO_URL, MOD_DB_FILE, MOD_OVERRIDES);
         const res_headers = {
             'Content-Type': 'application/json',
             'Cache-Control': 'max-age=' + String(CACHE_MAX_AGE)
@@ -60,6 +60,7 @@ createServer(async (req, res) => {
         }
     }
     else if (reqUrl.pathname === '/flush/' + SECRET) {
+        console.log('Flushing cache');
         fs.unlinkSync(MOD_DB_FILE);
         res.writeHead(200, { 'Content-Type': 'text/html' });
         res.end('<html><head></head><body>Mods cache emptied &#x1F9F9</body></html>');

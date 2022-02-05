@@ -8,8 +8,8 @@ const http_1 = require("http");
 const url_1 = require("url");
 const A3sRemoteServer_1 = __importDefault(require("./A3sRemoteServer"));
 const A3sMods_1 = __importDefault(require("./A3sMods"));
-const OFCRA_A3S_URL = 'http://repo.ofcra.org/.a3s/';
-const OFCRA_A3S_REPO_URL = 'http://repo.ofcra.org/';
+const A3S_URL = 'http://repo.ofcra.org/.a3s/';
+const A3S_REPO_URL = 'http://repo.ofcra.org/';
 const MOD_DB_FILE = process.env.MOD_DB_FILE || './mods.json';
 const MOD_OVERRIDES = {
     '@ace_compat_rhs': {
@@ -35,8 +35,8 @@ const SECRET = process.env.SECRET || 'secret';
         fs_1.default.createReadStream('./index.html').pipe(res);
     }
     else if (reqUrl.pathname === '/data') {
-        const a3srs = new A3sRemoteServer_1.default(OFCRA_A3S_URL);
-        const a3sm = new A3sMods_1.default(OFCRA_A3S_REPO_URL, MOD_DB_FILE, MOD_OVERRIDES);
+        const a3srs = new A3sRemoteServer_1.default(A3S_URL);
+        const a3sm = new A3sMods_1.default(A3S_REPO_URL, MOD_DB_FILE, MOD_OVERRIDES);
         const res_headers = {
             'Content-Type': 'application/json',
             'Cache-Control': 'max-age=' + String(CACHE_MAX_AGE)
@@ -62,6 +62,7 @@ const SECRET = process.env.SECRET || 'secret';
         }
     }
     else if (reqUrl.pathname === '/flush/' + SECRET) {
+        console.log('Flushing cache');
         fs_1.default.unlinkSync(MOD_DB_FILE);
         res.writeHead(200, { 'Content-Type': 'text/html' });
         res.end('<html><head></head><body>Mods cache emptied &#x1F9F9</body></html>');

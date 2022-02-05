@@ -79,7 +79,7 @@ export default class A3sMods {
 
                 const promises = [];
                 for (const m of added_mods) {
-                    promises.push(this.fetchSourceData(m.id).catch(e => {}));
+                    promises.push(this.fetchSourceData(m.id).catch(e => { }));
                 }
 
                 await Promise.all(promises);
@@ -95,7 +95,7 @@ export default class A3sMods {
         }
     }
 
-    // Note: this function OFCRA specific
+    // Note: this function is OFCRA specific
     private async fetchRepoIndexData(new_mods: Mod[]) {
         if (this.db && this.db.data) {
             const src = await got(OFCRA_MOD_INDEX).text();
@@ -212,8 +212,8 @@ export default class A3sMods {
 
         let raw: Buffer | null = null;
         try {
-            raw = await got(file_url, {encoding: 'binary', responseType: 'buffer', resolveBodyOnly: true});
-        } catch (err) {}
+            raw = await got(file_url, { encoding: 'binary', responseType: 'buffer', resolveBodyOnly: true });
+        } catch (err) { }
 
         if (raw) {
             try {
