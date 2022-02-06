@@ -2,9 +2,9 @@
 [OFCRA](https://ofcrav2.org) Arma 3 Launcher presets generated from OFCRA ArmA3Sync events.  
 
 ## Running locally
-Some configuration available via [env vars and local variables](server.ts#L10).  
 Install dependencies (`npm i`) then start with `npm start` or `npm run dev`.  
-Web service starts at `http://localhost:8080` by default.
+Web service starts at `http://localhost:8080` by default.  
+*Some configuration available via [env vars and local variables](server.ts).*
 
 ## API
 #### GET /

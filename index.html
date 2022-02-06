@@ -168,7 +168,7 @@
         </section>
 
         <section>
-            <h2>Usage</h2>
+            <h2>Using the Arma 3 Launcher</h2>
             <div id="usage">
                 <details>
                     <summary>Download, unpack and load the required <b>Local mod</b>s</summary>
@@ -331,6 +331,7 @@
                     const log = e('details');
                     const bd = a3s_log.buildDate.split('T');
                     const summary = e('summary', bd[0] + ' ' + bd[1].split('.')[0]);
+                    summary.title = 'rev. ' + a3s_log.revision;
                     log.append(summary);
 
                     for (const type of ['newAddons', 'updatedAddons', 'deletedAddons']) {
