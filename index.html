@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>OFCRA Arma 3 Launcher presets</title>
     <meta name="description" content="OFCRA Arma 3 Launcher presets generated from OFCRA ArmA3Sync events. Return to 🐒" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dialog-polyfill@latest/dist/dialog-polyfill.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/dialog-polyfill@latest/dist/dialog-polyfill.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css">
     <style>
         html {
@@ -113,6 +115,21 @@
             margin-bottom: 10px;
         }
 
+        dialog + .backdrop {
+            background: rgba(0,0,0,.61);
+            -webkit-backdrop-filter: blur(4px);
+            backdrop-filter: blur(4px);
+        }
+
+        summary:focus, summary:hover {
+            text-decoration: none;
+        }
+
+        summary:focus span, summary:hover span {
+            text-decoration: underline;
+        }
+
+
         #changelogs h4 {
             margin-bottom: 6px;
         }
@@ -153,13 +170,6 @@
                 </thead>
                 <tbody id="events-tbody"></tbody>
             </table>
-            <dialog id="mods">
-                <header id="dialog-header" class="row">
-                    <span id="mods-title"></span>
-                    <form method="dialog"><button>❌</button></form>
-                </header>
-                <div id="dialog-content"></div>
-            </dialog>
         </section>
 
         <section>
@@ -171,12 +181,12 @@
             <h2>Using the Arma 3 Launcher</h2>
             <div id="usage">
                 <details>
-                    <summary>Download, unpack and load the required <b>Local mod</b>s</summary>
+                    <summary><span>Download, unpack and load the required <b>Local mod</b>s</span></summary>
                     <img src="https://user-images.githubusercontent.com/14183614/152661491-d9ba4ed2-6610-404a-8617-d3394d1c2765.gif"
                         alt="" />
                 </details>
                 <details>
-                    <summary>Download and <b>Import</b> the preset file</summary>
+                    <summary><span>Download and <b>Import</b> the preset file</span></summary>
                     <img src="https://user-images.githubusercontent.com/14183614/152661609-bfe16700-baa0-471a-b2d1-e606701cf57e.gif"
                         alt="" />
                 </details>
@@ -192,6 +202,14 @@
                 </path>
             </svg></a>
     </footer>
+
+    <dialog id="mods">
+        <header id="dialog-header" class="row">
+            <span id="mods-title"></span>
+            <form method="dialog"><button>❌</button></form>
+        </header>
+        <div id="dialog-content"></div>
+    </dialog>
 
     <script>
         const id = s => document.getElementById(s);
@@ -330,8 +348,10 @@
                 for (const a3s_log of data.a3s.changelogs.list.reverse()) {
                     const log = e('details');
                     const bd = a3s_log.buildDate.split('T');
-                    const summary = e('summary', bd[0] + ' ' + bd[1].split('.')[0]);
-                    summary.title = 'rev. ' + a3s_log.revision;
+                    const summary = e('summary');
+                    const span = e('span', bd[0] + ' ' + bd[1].split('.')[0]);
+                    span.title = 'rev. ' + a3s_log.revision;
+                    summary.append(span);
                     log.append(summary);
 
                     for (const type of ['newAddons', 'updatedAddons', 'deletedAddons']) {
@@ -374,6 +394,9 @@
                     dc.append(div);
                 }
 
+                if (id('mods').showModal === undefined) {
+                    dialogPolyfill.registerDialog(id('mods'));
+                }
                 id('mods').showModal();
             }
         }
