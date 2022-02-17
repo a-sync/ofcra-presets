@@ -57,7 +57,7 @@ const SECRET = process.env.SECRET || 'secret';
         catch (err) {
             const msg = err instanceof Error ? err.message : String(err);
             console.error('Error: %s', msg);
-            res.writeHead(404, res_headers);
+            res.writeHead(500, res_headers);
             res.end(JSON.stringify({ error: msg }, null, DBG ? 2 : 0));
         }
     }

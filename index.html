@@ -230,6 +230,9 @@
             fetch('/data')
                 .then(res => res.json())
                 .then(json => {
+                    if (json.error !== undefined) {
+                        throw new Error(json.error);
+                    }
                     render(json);
                     id('loading').className = 'dnone';
                     id('main').className = '';
