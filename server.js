@@ -8,8 +8,8 @@ const http_1 = require("http");
 const url_1 = require("url");
 const A3sRemoteServer_1 = __importDefault(require("./A3sRemoteServer"));
 const A3sMods_1 = __importDefault(require("./A3sMods"));
-const A3S_URL = 'http://repo.ofcra.org/.a3s/';
-const A3S_REPO_URL = 'http://repo.ofcra.org/';
+const A3S_URL = 'https://repo.ofcra.org/.a3s/';
+const A3S_REPO_URL = 'https://repo.ofcra.org/';
 const MOD_DB_FILE = process.env.MOD_DB_FILE || './mods.json';
 const MOD_OVERRIDES = {
     '@ace_compat_rhs': {

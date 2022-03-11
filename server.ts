@@ -4,8 +4,8 @@ import { URL } from 'url';
 import A3sRemoteServer from './A3sRemoteServer';
 import A3sMods from './A3sMods';
 
-const A3S_URL = 'http://repo.ofcra.org/.a3s/';
-const A3S_REPO_URL = 'http://repo.ofcra.org/';
+const A3S_URL = 'https://repo.ofcra.org/.a3s/';
+const A3S_REPO_URL = 'https://repo.ofcra.org/';
 
 const MOD_DB_FILE = process.env.MOD_DB_FILE || './mods.json';
 const MOD_OVERRIDES = {
