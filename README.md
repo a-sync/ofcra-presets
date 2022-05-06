@@ -17,11 +17,11 @@ Triggers the deletion of the `MOD_DB_FILE`.
 
 ## Data sources
 #### Events, changelogs
- 1. ArmA3Sync server: http://repo.ofcra.org/.a3s/
+ 1. ArmA3Sync server: https://repo.ofcra.org/.a3s/
 #### Mods
  1. `MOD_OVERRIDES` variable ([server.ts](server.ts#L11))
  2. mods index (https://ofcrav2.org/index.php?page=repository-en)
- 3. source files in the mods repo (http://repo.ofcra.org/)
+ 3. source files in the mods repo (https://repo.ofcra.org/)
     1. meta.cpp
     2. mod.cpp
  4. steam workshop
