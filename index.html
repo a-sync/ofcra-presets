@@ -2,12 +2,14 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>OFCRA Arma 3 Launcher presets</title>
     <meta name="description" content="OFCRA Arma 3 Launcher presets generated from OFCRA ArmA3Sync events. Return to 🐒" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dialog-polyfill@latest/dist/dialog-polyfill.min.css" />
-    <script src="https://cdn.jsdelivr.net/npm/dialog-polyfill@latest/dist/dialog-polyfill.min.js"></script>
+    <meta charset="utf-8" />
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://game.ofcra.org/img/logo.png" rel="icon" type="image/png">
+
+    <script src="https://cdn.jsdelivr.net/npm/he@1.2.0/he.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css">
     <style>
         html {
@@ -87,6 +89,7 @@
 
         #mods-title {
             font-weight: bold;
+            padding-right: 20px;
         }
 
         #dialog-header button {
@@ -111,8 +114,8 @@
             margin: -10px -30px -10px;
         }
 
-        #dialog-content div {
-            margin-bottom: 10px;
+        #dialog-content ol {
+            margin: 0 5px;
         }
 
         dialog + .backdrop {
@@ -164,7 +167,7 @@
                 <thead>
                     <tr>
                         <th title="Description">Event</th>
-                        <th title="Workshop + Local">Mods</th>
+                        <th title="Workshop + Local/DLC">Mods</th>
                         <th title="Download">Preset</th>
                     </tr>
                 </thead>
@@ -221,6 +224,13 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            if (id('mods').showModal === undefined) {
+                document.querySelector('head').insertAdjacentHTML('afterbegin', [
+                    '\<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dialog-polyfill@latest/dist/dialog-polyfill.min.css"\>',
+                    '\<script src="https://cdn.jsdelivr.net/npm/dialog-polyfill@latest/dist/dialog-polyfill.min.js"\>\<\/script\>'
+                ].join(''));
+            }
+
             document.addEventListener('click', event => {
                 if (!event.target.closest('a[data-mods]') && !event.target.closest('#dialog-header') && !event.target.closest('#dialog-content')) {
                     id('mods').close();
@@ -245,13 +255,10 @@
         });
 
         const modlink = m => {
-            if (m.publishedid) {
-                return 'https://steamcommunity.com/sharedfiles/filedetails/?id=' + String(m.publishedid);
-            } else if (m.download) {
-                return String(m.download);
-            } else {
-                return '';
-            }
+            if (m.dlcid) return 'https://store.steampowered.com/app/' + String(m.dlcid);
+            else if (m.publishedid) return 'https://steamcommunity.com/sharedfiles/filedetails/?id=' + String(m.publishedid);
+            else if (m.download) return String(m.download);
+            else return '';
         };
 
         function render(data) {
@@ -377,25 +384,30 @@
             dc.replaceChildren();
             if (target.dataset.mods) {
                 const target_mods = target.dataset.mods.split(',');
+                const ol = e('ol');
                 for (const addon of target_mods) {
-                    const div = e('div');
+                    const li = e('li');
+
                     const span = e('span', mods[addon] ? mods[addon].name : addon);
                     if (mods[addon] && mods[addon].id !== mods[addon].name) {
                         span.title = mods[addon].id;
                     }
-                    div.append(span);
+                    li.append(span);
 
                     const ml = mods[addon] ? modlink(mods[addon]) : '';
                     if (ml) {
-                        span.textContent += ': ';
                         const a = e('a');
                         a.href = ml;
-                        a.textContent = ml;
-                        div.append(a);
+                        a.setAttribute('target', '_blank');
+                        a.append(span);
+                        li.append(a);
+                    } else {
+                        li.append(span);
                     }
 
-                    dc.append(div);
+                    ol.append(li);
                 }
+                dc.append(ol);
 
                 if (id('mods').showModal === undefined) {
                     dialogPolyfill.registerDialog(id('mods'));
@@ -405,10 +417,11 @@
         }
 
         function downloadPreset(a3s_event, mods) {
-            const preset_template = '<?xml version="1.0" encoding="utf-8"?><html><!--Created by https://ofcra-presets.cloudno.de--><head><meta name="arma:Type" content="preset" /><meta name="arma:PresetName" content="{PRESET_FILENAME}" /><meta name="generator" content="Arma 3 Launcher - https://ofcra-presets.cloudno.de" /><title>Arma 3</title><link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css" /><style>body{margin:0;padding:0;color:#fff;background:#000}body,td,th{font:95%/1.3 Roboto, Segoe UI, Tahoma, Arial, Helvetica, sans-serif}td{padding:3px 30px 3px 0}h1{padding:20px 20px 0 80px;color:white;font-weight:200;font-family:segoe ui;font-size:3em;margin:0;background:transparent url(https://game.ofcra.org/img/logo.png) left 15px no-repeat;background-size: 80px auto;}em{font-variant:italic;color:silver}.before-list{padding:5px 20px 10px}.mod-list{background:#222222;padding:20px}.dlc-list{background:#222222;padding:20px}.footer{padding:20px;color:gray}.whups{color:gray}a{color:#D18F21;text-decoration:underline}a:hover{color:#F1AF41;text-decoration:none}.from-steam{color:#449EBD}.from-local{color:gray}</style></head><body><h1>Arma 3 - Preset <strong>{PRESET_NAME}</strong></h1><p class="before-list"><em>Drag this file or link to it to Arma 3 Launcher or open it Mods / Preset / Import.</em><br/>Download non workshop mods from the <a href="https://ofcrav2.org/index.php?page=repository-en">OFCRA mod index</a>, unpack them and load the extracted folders as <em>Local mod</em>.</p><div class="mod-list"><table>{MOD_LIST}</table></div><div class="dlc-list"></div><div class="footer"><span>Created by <a href="https://ofcra-presets.cloudno.de">https://ofcra-presets.cloudno.de</a></span></div></body></html>';
+            const preset_template = '<?xml version="1.0" encoding="utf-8"?><html><!--Created by https://ofcra-presets.cloudno.de--><head><meta name="arma:Type" content="preset" /><meta name="arma:PresetName" content="{PRESET_FILENAME}" /><meta name="generator" content="Arma 3 Launcher - https://ofcra-presets.cloudno.de" /><title>Arma 3</title><link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css" /><style>body{margin:0;padding:0;color:#fff;background:#000}body,td,th{font:95%/1.3 Roboto, Segoe UI, Tahoma, Arial, Helvetica, sans-serif}td{padding:3px 30px 3px 0}h1{padding:20px 20px 0 80px;color:white;font-weight:200;font-family:segoe ui;font-size:3em;margin:0;background:transparent url(https://game.ofcra.org/img/logo.png) left 15px no-repeat;background-size: 66px auto;}em{font-variant:italic;color:silver}.before-list{padding:5px 20px 10px}.mod-list{background:#222222;padding:20px}.dlc-list{background:#222222;padding:20px}.footer{padding:20px;color:gray}.whups{color:gray}a{color:#D18F21;text-decoration:underline}a:hover{color:#F1AF41;text-decoration:none}.from-steam{color:#449EBD}.from-local{color:gray}</style></head><body><h1>Arma 3 - Preset <strong>{PRESET_NAME}</strong></h1><p class="before-list"><em>Drag this file over the Arma 3 Launcher or load it from Mods / Preset / Import.</em><br/>Download non workshop mods from the <a href="https://ofcrav2.org/index.php?page=repository-en">OFCRA mod index</a>, unpack them and load the extracted folders as <em>Local mod</em>.</p><div class="mod-list"><table>{MOD_LIST}</table></div><div class="dlc-list"><table>{DLC_LIST}</table></div><div class="footer"><span>Created by <a href="https://ofcra-presets.cloudno.de">https://ofcra-presets.cloudno.de</a></span></div></body></html>';
 
             const filename = a3s_event.name.replace(/[\/\\\?\%\*\:\|\"\<\>]/g, '_');
-            const modcontainers = [];
+            const modContainers = [];
+            const dlcContainers = [];
             for (const addon in a3s_event.addonNames) {
                 let dn = addon;
                 let from = 'local">Local';
@@ -416,9 +429,13 @@
                 let link = '';
                 if (mods[addon]) {
                     dn = mods[addon].name;
-                    if (mods[addon].publishedid) {
+                    if (mods[addon].dlcid) {
+                        link = 'https://store.steampowered.com/app/' + String(mods[addon].dlcid);
+                        dlcContainers.push('<tr data-type="DlcContainer"><td data-type="DisplayName">' + he.encode(dn) + '</td><td><a href="' + link + '" data-type="Link">' + link + '</a></td></tr>');
+                        continue;
+                    } else if (mods[addon].publishedid) {
                         from = 'steam">Steam';
-                        const link_href = 'http://steamcommunity.com/sharedfiles/filedetails/?id=' + mods[addon].publishedid;
+                        const link_href = 'http://steamcommunity.com/sharedfiles/filedetails/?id=' + String(mods[addon].publishedid);
                         link = '<a href="' + link_href + '" data-type="Link">' + link_href + '</a>';
                     } else {
                         local = '<span class="whups" data-type="Link" data-meta="local:' + dn + '|' + addon + '|" />';
@@ -429,13 +446,14 @@
                 } else {
                     local = '<span class="whups" data-type="Link" data-meta="local:' + addon + '|' + addon + '|" />';
                 }
-                modcontainers.push('<tr data-type="ModContainer"><td data-type="DisplayName">' + dn + '</td><td><span class="from-' + from + '</span></td><td>' + local + link + '</td></tr>');
+                modContainers.push('<tr data-type="ModContainer"><td data-type="DisplayName">' + he.encode(dn) + '</td><td><span class="from-' + from + '</span></td><td>' + local + link + '</td></tr>');
             }
 
             const source = preset_template
                 .replace('{PRESET_FILENAME}', filename)
                 .replace('{PRESET_NAME}', a3s_event.name)
-                .replace('{MOD_LIST}', modcontainers.join(''));
+                .replace('{MOD_LIST}', modContainers.join(''))
+                .replace('{DLC_LIST}', dlcContainers.join(''));
             const element = document.createElement('a');
             element.href = 'data:text/html;charset=utf-8,' + encodeURIComponent(source);
             element.download = filename + '.html';

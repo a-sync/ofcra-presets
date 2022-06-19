@@ -16,6 +16,11 @@ const MOD_OVERRIDES = {
         id: '@ace_compat_rhs',
         name: 'ACE RHS Compat All-in-One',
         publishedid: '2019167442'
+    },
+    'vn': {
+        id: 'vn',
+        name: 'Arma 3 Creator DLC: S.O.G. Prairie Fire',
+        dlcid: '1227700'
     }
 };
 const CACHE_MAX_AGE = parseInt(process.env.CACHE_MAX_AGE || '0', 10);

@@ -8,6 +8,7 @@ export interface Mod {
     name: string;
     publishedid?: string;
     download?: string;
+    dlcid?: string;
 }
 
 export interface Modlist {
