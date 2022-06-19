@@ -9,7 +9,7 @@
   },
   "keywords": [],
   "author": "a-sync@devs.space",
-  "license": "GPLv3",
+  "license": "AGPL-3.0-or-later",
   "dependencies": {
     "@commonify/lowdb": "^3.0.0",
     "arma-class-parser": "^1.1.1",
