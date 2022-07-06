@@ -89,7 +89,6 @@
 
         #mods-title {
             font-weight: bold;
-            max-width: calc(100% - 60px);
         }
 
         #dialog-header button {
@@ -102,23 +101,12 @@
             box-shadow: none;
         }
 
-        #dialog-header {
-            padding: 10px 20px;
-        }
-
         #dialog-content {
             display: flex;
             flex-flow: column;
             align-items: flex-start;
             margin: -10px -30px;
-        }
-
-        #dialog-content ol {
-            margin: 10px 0 20px 0;
-        }
-
-        #dialog-content ol {
-            margin-right: 20px;
+            padding-right: 20px;
         }
 
         dialog + .backdrop {
@@ -286,7 +274,7 @@
                     const td2 = e('td');
                     if (event_mods.ws.length > 0) {
                         const ws_mods = e('a', String(event_mods.ws.length));
-                        ws_mods.dataset.event = a3s_event.name + ' Workshop mods';
+                        ws_mods.dataset.event = a3s_event.name + ' - Workshop mods';
                         ws_mods.dataset.mods = event_mods.ws.join(',');
                         td2.append(ws_mods);
                     } else {
@@ -297,7 +285,7 @@
 
                     if (event_mods.local.length > 0) {
                         const local_mods = e('a', String(event_mods.local.length));
-                        local_mods.dataset.event = a3s_event.name + ' Local mods';
+                        local_mods.dataset.event = a3s_event.name + ' - Local/DLC mods';
                         local_mods.dataset.mods = event_mods.local.join(',');
                         td2.append(local_mods);
                     } else {
@@ -382,6 +370,7 @@
 
         function showModsModal(target, mods) {
             id('mods-title').textContent = target.dataset.event;
+            id('mods-title').innerHTML += ' &nbsp; &nbsp; ';
 
             const dc = id('dialog-content');
             dc.replaceChildren();
