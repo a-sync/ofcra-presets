@@ -4,8 +4,9 @@
   "description": "OFCRA Arma 3 Launcher presets generated from OFCRA ArmA3Sync events.",
   "main": "server",
   "scripts": {
-    "start": "tsc&& node server",
-    "dev": "tsc-watch --onSuccess \"node server.js\""
+    "start": "node server",
+    "dev": "tsc-watch --onSuccess \"node server.js\"",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "a-sync@devs.space",
