@@ -1,4 +1,4 @@
-# ofcra-presets.cloudno.de
+# ofcra-presets
 [OFCRA](https://ofcrav2.org) Arma 3 Launcher presets generated from OFCRA ArmA3Sync events.  
 
 ## Running locally

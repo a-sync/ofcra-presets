@@ -1,5 +1,5 @@
 {
-  "name": "ofcra-presets.cloudno.de",
+  "name": "ofcra-presets",
   "version": "1.0.0",
   "description": "OFCRA Arma 3 Launcher presets generated from OFCRA ArmA3Sync events.",
   "main": "server",
