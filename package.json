@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server",
     "dev": "tsc-watch --onSuccess \"node server.js\"",
-    "build": "tsc"
+    "build": "npx tsc"
   },
   "keywords": [],
   "author": "a-sync@devs.space",

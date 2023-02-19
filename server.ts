@@ -22,8 +22,8 @@ const MOD_OVERRIDES = {
 };
 
 const CACHE_MAX_AGE = parseInt(process.env.CACHE_MAX_AGE || '0', 10);
-const APP_HOST = process.env.app_host || '0.0.0.0';
-const APP_PORT = parseInt(process.env.app_port || process.env.PORT || '8080', 10);
+const APP_HOST = process.env.HOST || '0.0.0.0';
+const APP_PORT = parseInt(process.env.PORT || '8080', 10);
 const DBG = Boolean(process.env.DBG || false);
 const SECRET = process.env.SECRET || 'secret';
 
