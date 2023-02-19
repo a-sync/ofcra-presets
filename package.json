@@ -1,12 +1,12 @@
 {
   "name": "ofcra-presets",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "OFCRA Arma 3 Launcher presets generated from OFCRA ArmA3Sync events.",
   "main": "server",
   "scripts": {
     "start": "node server",
     "dev": "tsc-watch --onSuccess \"node server.js\"",
-    "build": "npx tsc"
+    "build": "tsc"
   },
   "keywords": [],
   "author": "a-sync@devs.space",
