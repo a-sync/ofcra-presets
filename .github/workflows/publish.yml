@@ -15,8 +15,9 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - uses: superfly/flyctl-actions/setup-flyctl@master
-      - name: 🐙 Deploy to fly.io
+
+      - name: 🛩 Deploy to fly.io
+        uses: superfly/flyctl-actions/setup-flyctl@master
         run: flyctl deploy --remote-only --auto-confirm --app ofcra-presets
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
