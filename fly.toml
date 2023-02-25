@@ -4,12 +4,12 @@ kill_signal = "SIGINT"
 kill_timeout = 5
 processes = []
 
-[env]
-  MOD_DB_FILE = "/data/mods.json"
-
-[mounts]
-  source="ofcra_presets_data"
-  destination="/data"
+#[env]
+#  MOD_DB_FILE = "/data/mods.json"
+#
+#[mounts]
+#  source="ofcra_presets_data"
+#  destination="/data"
 
 [experimental]
   auto_rollback = true
