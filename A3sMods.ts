@@ -102,47 +102,56 @@ export default class A3sMods {
             const src = await got(OFCRA_MOD_INDEX).text();
             const rows = src.split('<tr>').slice(2);
 
-            for (const r of rows) {
-                const link_id = r.match(/<td>(.*?)<\/td><td>(.*?)<\/td>/);
-                if (link_id) {
-                    const rm: Mod = {
-                        id: link_id[2],
-                        name: link_id[2]
-                    };
+            if (rows.length > 0) {
+                for (const r of rows) {
+                    const link_id = r.match(/<td>(.*?)<\/td><td>(.*?)<\/td>/);
+                    if (link_id) {
+                        const rm: Mod = {
+                            id: link_id[2],
+                            name: link_id[2]
+                        };
 
-                    const url = link_id[1].match(/href="(.*?)"/);
-                    if (url) {
-                        if (url[1].indexOf('/filedetails/?id=') !== -1) {
-                            rm.publishedid = url[1].split('?id=')[1];
+                        const url = link_id[1].match(/href="(.*?)"/);
+                        if (url) {
+                            if (url[1].indexOf('/filedetails/?id=') !== -1) {
+                                rm.publishedid = url[1].split('?id=')[1];
+                            } else {
+                                rm.download = url[1];
+                            }
+                        }
+
+                        const nm = new_mods.find(m => m.id === rm.id);
+                        if (nm) {
+                            if (rm.publishedid) {
+                                nm.publishedid = rm.publishedid;
+                            }
+                            if (rm.download) {
+                                nm.download = rm.download;
+                            }
+                            this.db.data.mods[nm.id] = nm;
                         } else {
-                            rm.download = url[1];
+                            if (!this.db.data.mods[rm.id]) {
+                                const nm: Mod = {
+                                    id: rm.id,
+                                    name: rm.id,
+                                } as Mod;
+                                this.db.data.mods[rm.id] = nm;
+                            }
+                            if (rm.publishedid) {
+                                this.db.data.mods[rm.id].publishedid = rm.publishedid;
+                            }
+                            if (rm.download) {
+                                this.db.data.mods[rm.id].download = rm.download;
+                            }
+                            new_mods.push(this.db.data.mods[rm.id]);
                         }
                     }
-
-                    const nm = new_mods.find(m => m.id === rm.id);
-                    if (nm) {
-                        if (rm.publishedid) {
-                            nm.publishedid = rm.publishedid;
-                        }
-                        if (rm.download) {
-                            nm.download = rm.download;
-                        }
+                }
+            } else {
+                console.warn('repo index empty');
+                for (const nm of new_mods) {
+                    if (!this.db.data.mods[nm.id]) {
                         this.db.data.mods[nm.id] = nm;
-                    } else {
-                        if (!this.db.data.mods[rm.id]) {
-                            const nm: Mod = {
-                                id: rm.id,
-                                name: rm.id,
-                            } as Mod;
-                            this.db.data.mods[rm.id] = nm;
-                        }
-                        if (rm.publishedid) {
-                            this.db.data.mods[rm.id].publishedid = rm.publishedid;
-                        }
-                        if (rm.download) {
-                            this.db.data.mods[rm.id].download = rm.download;
-                        }
-                        new_mods.push(this.db.data.mods[rm.id]);
                     }
                 }
             }
