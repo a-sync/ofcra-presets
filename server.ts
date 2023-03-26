@@ -75,7 +75,8 @@ createServer(async (req, res) => {
             res.writeHead(200, res_headers);
             res.end(JSON.stringify({
                 mods: a3sm.getMods(),
-                a3s: a3srs
+                a3s: a3srs,
+                events: await a3sm.fetchEventCalendar()
             }, null, DBG ? 2 : 0));
         } catch (err) {
             const msg = err instanceof Error ? err.message : String(err);

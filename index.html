@@ -62,28 +62,31 @@
             display: none;
         }
 
-        #events tr th,
-        #events tr td {
+        #presets tr th,
+        #presets tr td {
             text-align: center;
         }
 
-        #events tr th:first-child,
-        #events tr td:first-child {
+        #presets tr th:first-child,
+        #presets tr td:first-child {
             text-align: left;
         }
 
-        #events tr th:last-child,
-        #events tr td:last-child {
+        #presets tr th:last-child,
+        #presets tr td:last-child,
+        #events tr th:first-child,
+        #events tr td:first-child
+        {
             text-align: right;
         }
 
-        #events tbody tr th:last-child,
-        #events tbody tr td:last-child {
+        #presets tbody tr th:last-child,
+        #presets tbody tr td:last-child {
             font-size: .7rem;
             vertical-align: middle;
         }
 
-        #events td a {
+        #presets td a {
             cursor: pointer;
         }
 
@@ -153,16 +156,28 @@
 
     <main id="main" class="dnone">
         <section>
-            <h2>Events</h2>
             <table id="events">
                 <thead>
                     <tr>
-                        <th title="Description">Event</th>
-                        <th title="Workshop + Local/DLC" width="10%">Mods</th>
-                        <th title="Download">Preset</th>
+                        <th>Date</th>
+                        <th>Event</th>
                     </tr>
                 </thead>
                 <tbody id="events-tbody"></tbody>
+            </table>
+        </section>
+
+        <section>
+            <h2>Presets</h2>
+            <table id="presets">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th title="Workshop + Local/DLC" width="10%">Mods</th>
+                        <th>Download</th>
+                    </tr>
+                </thead>
+                <tbody id="presets-tbody"></tbody>
             </table>
         </section>
 
@@ -254,6 +269,26 @@
 
         function render(data) {
             // Events
+            if (data.events && Array.isArray(data.events) && data.events.length > 0) {
+                for (const ev of data.events) {
+                    const td1 = e('td', ev.date);
+
+                    const td2 = e('td');
+                    const ev_link = e('a', ev.name);
+                    ev_link.href = ev.url;
+                    ev_link.target = '_blank';
+                    td2.append(ev_link);
+
+                    const tr = e('tr');
+                    tr.append(td1, td2);
+
+                    id('events-tbody').append(tr);
+                }
+            } else {
+                id('events').parentNode.style.display = 'none';
+            }
+
+            // Presets
             if (data.a3s && data.a3s.events && Array.isArray(data.a3s.events.list)) {
                 for (const index in data.a3s.events.list.reverse()) {
                     const a3s_event = data.a3s.events.list[index];
@@ -301,7 +336,7 @@
                     const tr = e('tr');
                     tr.append(td1, td2, td3);
 
-                    id('events-tbody').append(tr);
+                    id('presets-tbody').append(tr);
                 }
 
                 // Attach modal event handler to modlist links 
@@ -312,7 +347,7 @@
                 });
 
                 // Attach download event handler to preset links
-                q('#events a[data-index]').forEach(el => {
+                q('#presets a[data-index]').forEach(el => {
                     el.addEventListener('click', event => {
                         const index = event.target.dataset.index;
                         downloadPreset(data.a3s.events.list[index], data.mods);

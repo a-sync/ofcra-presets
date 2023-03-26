@@ -20,6 +20,7 @@ interface Db {
 }
 
 const OFCRA_MOD_INDEX = 'https://ofcrav2.org/index.php?page=repository-en';
+const OFCRA_CALENDAR = 'https://ofcrav2.org/index.php?page=donate';
 
 export default class A3sMods {
     private a3s_repo_url: string;
@@ -164,6 +165,35 @@ export default class A3sMods {
         }
 
         return new_mods;
+    }
+
+    // Note: this function is OFCRA specific
+    async fetchEventCalendar() {
+        const events: any[] = [];
+        let rows: string[] = [];
+
+        try {
+            const src = await got(OFCRA_CALENDAR, { timeout: 3000 }).text();
+            rows = src.split('<h2>Agenda</h2>')[1].split('<ul class="calendar">')[1].split('</ul>')[0].split('<li>');
+        } catch (err: any) {
+            console.error(err?.message);
+        }
+
+        if (rows.length > 0) {
+            for (const r of rows) {
+                const items = r.match(/<a href="(.*?)"><span class="date">(.*?)<\/span><span class="title">(.*?)<\/span><\/a>/);
+                if (items) {
+                    const dp = items[2].split('.');
+                    events.push({
+                        url: items[1],
+                        date: dp[2] + '-' + dp[1] + '-' + dp[0],
+                        name: items[3]
+                    });
+                }
+            }
+        }
+
+        return events;
     }
 
     private async fetchSourceData(id: string) {
