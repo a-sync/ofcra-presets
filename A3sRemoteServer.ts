@@ -148,12 +148,12 @@ export default class A3sRemoteServer {
     }
 
     private async loadSingleData(t: keyof typeof A3sDataTypes): Promise<CancelableRequest | void> {
-        return got(this.url + t, { decompress: false })
+        return got(this.url + t, { decompress: false, timeout: 3000 })
             .buffer()
             .then(buff => {
                 this[t] = new InputObjectStream(gunzipSync(buff), false).readObject();
                 // console.log(JSON.stringify(this[t], null, 2)); // debug
-            });
-            // .catch(e => console.error(t, e.message)); // debug
+            })
+            .catch((e: any) => console.error(t, e?.message));
     }
 }

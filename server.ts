@@ -86,7 +86,12 @@ createServer(async (req, res) => {
     }
     else if (reqUrl.pathname === '/flush/' + SECRET) {
         console.log('Flushing cache');
-        fs.unlinkSync(MOD_DB_FILE);
+        try {
+            fs.unlinkSync(MOD_DB_FILE);
+        } catch (err: any) {
+            console.error(err?.message);
+        }
+        
         res.writeHead(200, { 'Content-Type': 'text/html' });
         res.end('<html><head></head><body>Mods cache emptied &#x1F9F9</body></html>');
     }

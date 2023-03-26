@@ -15,7 +15,7 @@
     "@commonify/lowdb": "^3.0.0",
     "arma-class-parser": "^1.1.1",
     "esm": "^3.2.25",
-    "got": "^11.8.3",
+    "got": "^11.8.6",
     "java.io": "^2.4.0"
   },
   "devDependencies": {

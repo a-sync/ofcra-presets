@@ -99,8 +99,14 @@ export default class A3sMods {
     // Note: this function is OFCRA specific
     private async fetchRepoIndexData(new_mods: Mod[]) {
         if (this.db && this.db.data) {
-            const src = await got(OFCRA_MOD_INDEX).text();
-            const rows = src.split('<tr>').slice(2);
+            let rows: string[] = [];
+
+            try {
+                const src = await got(OFCRA_MOD_INDEX, { timeout: 3000 }).text();
+                rows = src.split('<tr>').slice(2);
+            } catch (err: any) {
+                console.error(err?.message);
+            }
 
             if (rows.length > 0) {
                 for (const r of rows) {
@@ -222,7 +228,7 @@ export default class A3sMods {
 
         let raw: Buffer | null = null;
         try {
-            raw = await got(file_url, { encoding: 'binary', responseType: 'buffer', resolveBodyOnly: true });
+            raw = await got(file_url, { encoding: 'binary', responseType: 'buffer', resolveBodyOnly: true, timeout: 3000 });
         } catch (err) { }
 
         if (raw) {
