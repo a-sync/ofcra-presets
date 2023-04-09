@@ -1,13 +1,8 @@
 # ofcra-presets
 [OFCRA](https://ofcrav2.org) Arma 3 Launcher presets generated from OFCRA ArmA3Sync events.  
 
-<details>
-<summary><h2>Screenshots</h2></summary>
-
-![screenshot-home](https://user-images.githubusercontent.com/14183614/229900890-235e51c6-4cc9-476d-80a2-e31e32a03db1.png)
-
-![screenshot-preset-mods](https://user-images.githubusercontent.com/14183614/228828857-55d3350c-96de-4c88-a6bd-59434fe55f77.png)
-</details>
+## Screenshots
+<img src="https://user-images.githubusercontent.com/14183614/229900890-235e51c6-4cc9-476d-80a2-e31e32a03db1.png" height="300"> <img src="https://user-images.githubusercontent.com/14183614/228828857-55d3350c-96de-4c88-a6bd-59434fe55f77.png" height="300"> 
 
 ## Running locally
 Install dependencies (`npm i`) first, then build artifacts with `npm run build` and start with `npm start` or just use `npm run dev`.  
@@ -35,4 +30,3 @@ Triggers the deletion of the `MOD_DB_FILE`.
     1. meta.cpp
     2. mod.cpp
  4. steam workshop
-
