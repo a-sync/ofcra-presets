@@ -16,9 +16,11 @@
     "arma-class-parser": "^1.1.1",
     "esm": "^3.2.25",
     "got": "^11.8.6",
+    "he": "^1.2.0",
     "java.io": "^2.4.0"
   },
   "devDependencies": {
+    "@types/he": "^1.2.3",
     "@types/node": "^16",
     "@types/utf8": "^3.0.1",
     "tsc-watch": "^4.6.0",

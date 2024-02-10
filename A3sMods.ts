@@ -1,5 +1,6 @@
 import { parse } from 'arma-class-parser';
 import got from 'got';
+import he from 'he';
 import { Low, JSONFile } from '@commonify/lowdb';
 import { A3sEventsDto } from './A3sRemoteServer';
 
@@ -187,7 +188,7 @@ export default class A3sMods {
                     events.push({
                         url: items[1],
                         date: dp[2] + '-' + dp[1] + '-' + dp[0],
-                        name: items[3]
+                        name: he.decode(items[3])
                     });
                 }
             }
