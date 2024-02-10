@@ -38,6 +38,11 @@ const MOD_OVERRIDES = {
         id: '@ww2_armored_cars',
         name: 'WW2 Armored Cars',
         publishedid: '2811202098'
+    },
+    '@sahatra_army_of_sadam': {
+        id: '@sahatra_army_of_sadam',
+        name: 'Sa\'hatra - Army of Saddam',
+        publishedid: '3020327478'
     }
 };
 
