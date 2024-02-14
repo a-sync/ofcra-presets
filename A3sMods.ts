@@ -34,7 +34,6 @@ export default class A3sMods {
      * @param a3s_repo_url the ArmA3Sync repo root url
      * @param db_file db storage file
      * @param overrides mod item overrides
-     * @param dl_url_tpl mod download url template
      */
     constructor(a3s_repo_url: string, db_file: string, overrides?: Modlist) {
         this.a3s_repo_url = a3s_repo_url;
