@@ -18,31 +18,6 @@ const MOD_OVERRIDES = {
         id: 'vn',
         name: 'Arma 3 Creator DLC: S.O.G. Prairie Fire',
         dlcid: '1227700'
-    },
-    '@sweet_marker_system': {
-        id: '@sweet_marker_system',
-        name: 'Sweet markers system',
-        publishedid: '324952672'
-    },
-    '@fallujah_2_0': {
-        id: '@fallujah_2_0',
-        name: 'Fallujah 2.0',
-        publishedid: '2926828901'
-    },
-    '@knock_on_vehicles': {
-        id: '@knock_on_vehicles',
-        name: 'Knock On Vehicles',
-        publishedid: '906748433'
-    },
-    '@ww2_armored_cars': {
-        id: '@ww2_armored_cars',
-        name: 'WW2 Armored Cars',
-        publishedid: '2811202098'
-    },
-    '@sahatra_army_of_sadam': {
-        id: '@sahatra_army_of_sadam',
-        name: 'Sa\'hatra - Army of Saddam',
-        publishedid: '3020327478'
     }
 };
 
