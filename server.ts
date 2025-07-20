@@ -18,6 +18,36 @@ const MOD_OVERRIDES = {
         id: 'vn',
         name: 'Arma 3 Creator DLC: S.O.G. Prairie Fire',
         dlcid: '1227700'
+    },
+    'gm': {
+        id: 'gm',
+        name: 'Arma 3 Creator DLC: Global Mobilization',
+        dlcid: '1042220'
+    },
+    'csla': {
+        id: 'csla',
+        name: 'Arma 3 Creator DLC: CSLA Iron Curtain',
+        dlcid: '1294440'
+    },
+    'ws': {
+        id: 'ws',
+        name: 'Arma 3 Creator DLC: Western Sahara',
+        dlcid: '1681170'
+    },
+    'spe': {
+        id: 'spe',
+        name: 'Arma 3 Creator DLC: Spearhead 1944',
+        dlcid: '1175380'
+    },
+    'rf': {
+        id: 'rf',
+        name: 'Arma 3 Creator DLC: Reaction Forces',
+        dlcid: '2647760'
+    },
+    'ef': {
+        id: 'ef',
+        name: 'Arma 3 Creator DLC: Expeditionary Forces',
+        dlcid: '2647830'
     }
 };
 
